@@ -19,8 +19,14 @@ class CpuArchHelper {
                     if (cpuNativeArchHelper.isNeonSupported(archInfo)) {
                         return CpuArch.ARMv7_NEON;
                     }
+
                     return CpuArch.ARMv7;
                 }
+            }
+
+            else if (Build.CPU_ABI.equals(getArm64v8a())) {
+                // Supports neon
+                return CpuArch.ARMv7_NEON;
             }
         }
         return CpuArch.NONE;
@@ -32,5 +38,9 @@ class CpuArchHelper {
 
     static String getArmeabiv7CpuAbi() {
         return "armeabi-v7a";
+    }
+
+    static String getArm64v8a(){
+        return "arm64-v8a";
     }
 }
