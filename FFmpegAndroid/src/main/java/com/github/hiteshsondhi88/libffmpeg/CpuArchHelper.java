@@ -5,12 +5,15 @@ import android.os.Build;
 class CpuArchHelper {
 
     static CpuArch getCpuArch() {
-        // check if device is x86
-        if (Build.CPU_ABI.equals(getx86CpuAbi())) {
-            return CpuArch.x86;
-        } else {
-            // check if device is armeabi
-            if (Build.CPU_ABI.equals(getArmeabiv7CpuAbi())) {
+
+        for(String s : Build.SUPPORTED_ABIS){
+            // X86
+            if(s.equals(getx86CpuAbi())){
+                return CpuArch.x86;
+            }
+
+            // Armebi
+            if (s.equals(getArmeabiv7CpuAbi())) {
                 ArmArchHelper cpuNativeArchHelper = new ArmArchHelper();
                 String archInfo = cpuNativeArchHelper.cpuArchFromJNI();
                 // check if device is arm v7
@@ -29,6 +32,7 @@ class CpuArchHelper {
                 return CpuArch.ARMv7_NEON;
             }
         }
+
         return CpuArch.NONE;
     }
 
