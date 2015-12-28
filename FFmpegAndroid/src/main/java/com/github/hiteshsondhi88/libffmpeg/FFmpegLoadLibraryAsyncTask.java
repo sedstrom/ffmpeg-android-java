@@ -7,13 +7,11 @@ import java.io.File;
 
 class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
-    private final String cpuArchNameFromAssets;
     private final FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler;
     private final Context context;
 
-    FFmpegLoadLibraryAsyncTask(Context context, String cpuArchNameFromAssets, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler) {
+    FFmpegLoadLibraryAsyncTask(Context context, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler) {
         this.context = context;
-        this.cpuArchNameFromAssets = cpuArchNameFromAssets;
         this.ffmpegLoadBinaryResponseHandler = ffmpegLoadBinaryResponseHandler;
     }
 
@@ -24,9 +22,7 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Boolean> {
             return false;
         }
         if (!ffmpegFile.exists()) {
-            boolean isFileCopied = FileUtils.copyBinaryFromAssetsToData(context,
-                    cpuArchNameFromAssets + File.separator + FileUtils.ffmpegFileName,
-                    FileUtils.ffmpegFileName);
+            boolean isFileCopied = FileUtils.copyBinaryFromRawToData(context, FileUtils.ffmpegFileName);
 
             // make file executable
             if (isFileCopied) {
@@ -58,6 +54,11 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     private boolean isDeviceFFmpegVersionOld() {
-        return CpuArch.fromString(FileUtils.SHA1(FileUtils.getFFmpeg(context))).equals(CpuArch.NONE);
+        String latestSha1 = FileUtils.getLatestFfmpegSha1(context);
+        String currentSha1 = FileUtils.SHA1(FileUtils.getFFmpeg(context));
+        boolean newerFffmpegAvailable = !latestSha1.equals(currentSha1);
+        Log.d(String.format("Latest sha1: %s current sha1 : %s ", latestSha1, currentSha1));
+        Log.d("Newer ffmpeg availabel : " + newerFffmpegAvailable);
+        return newerFffmpegAvailable;
     }
 }

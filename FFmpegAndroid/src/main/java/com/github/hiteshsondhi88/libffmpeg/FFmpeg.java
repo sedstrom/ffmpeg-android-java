@@ -34,30 +34,8 @@ public class FFmpeg implements FFmpegInterface {
 
     @Override
     public void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler) throws FFmpegNotSupportedException {
-        String cpuArchNameFromAssets = null;
-        switch (CpuArchHelper.getCpuArch()) {
-            case x86:
-                Log.i("Loading FFmpeg for x86 CPU");
-                cpuArchNameFromAssets = "x86";
-                break;
-            case ARMv7:
-                Log.i("Loading FFmpeg for armv7 CPU");
-                cpuArchNameFromAssets = "armeabi-v7a";
-                break;
-            case ARMv7_NEON:
-                Log.i("Loading FFmpeg for armv7-neon CPU");
-                cpuArchNameFromAssets = "armeabi-v7a-neon";
-                break;
-            case NONE:
-                throw new FFmpegNotSupportedException("Device not supported");
-        }
-
-        if (!TextUtils.isEmpty(cpuArchNameFromAssets)) {
-            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler);
-            ffmpegLoadLibraryAsyncTask.execute();
-        } else {
-            throw new FFmpegNotSupportedException("Device not supported");
-        }
+        ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, ffmpegLoadBinaryResponseHandler);
+        ffmpegLoadLibraryAsyncTask.execute();
     }
 
     @Override

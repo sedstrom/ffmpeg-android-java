@@ -4,6 +4,8 @@ android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
 
+    publishNonDefault true
+
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -17,6 +19,11 @@ android {
         jniLibs.srcDirs = ['libs']
     }
 
+    productFlavors {
+        x86{}
+        arm7{}
+    }
+
     buildTypes {
         release {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -25,6 +32,5 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
 }
